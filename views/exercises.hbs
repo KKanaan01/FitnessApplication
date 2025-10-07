@@ -1,0 +1,13 @@
+<h1>{{title}}</h1>
+<ul>
+  {{#each exercises}}
+    <li>
+      <strong>{{name}}</strong> - {{bodyPart}} - {{equipment}}
+      {{!-- {{#if gifUrl}}
+        <br><img src="{{gifUrl}}" alt="{{name}}" width="150">
+      {{/if}} --}}
+    </li>
+  {{/each}}
+</ul>
+
+<a href="/">Go back home</a>
