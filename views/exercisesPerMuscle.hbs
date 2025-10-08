@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{title}} - Fitness Plan</title>
+  <style>
+    :root {
+      --primary-color: #f97316;
+      --secondary-color: #1e293b;
+      --text-light: #f1f5f9;
+      --text-dark: #334155;
+      --bg-light: #f0fdf4;
+      --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      --transition-fast: all 0.18s ease-in-out;
+      --muted: #64748b;
+    }
+
+    /* base */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Open Sans", sans-serif;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    header {
+      background: var(--secondary-color);
+      color: var(--text-light);
+      padding: 28px 20px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    header h1 { margin: 0; font-size: 2rem; font-weight:700; }
+    header p { margin: 6px 0 0; color:#cbd5e1; font-size:0.95rem; }
+
+    /* container */
+    .container {
+      max-width: 1200px;
+      margin: 28px auto;
+      padding: 0 20px 60px;
+    }
+
+    .top-row {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom: 18px;
+    }
+
+    .top-row .subtitle { color: var(--muted); font-weight:600; }
+
+    .btn {
+      background: var(--primary-color);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight:700;
+      transition: var(--transition-fast);
+      display:inline-block;
+    }
+    .btn:hover { transform: translateY(-2px); background:#c2410c; }
+
+    /* grid */
+    .exercise-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 22px;
+    }
+
+    .exercise-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: var(--card-shadow);
+      transition: var(--transition-fast);
+      border-left: 6px solid var(--primary-color);
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .exercise-card:hover { transform: translateY(-6px); box-shadow: 0 10px 24px rgba(0,0,0,0.12); }
+
+    .exercise-top {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+    }
+
+    .exercise-name {
+      color: var(--secondary-color);
+      font-size: 1.15rem;
+      font-weight:700;
+      margin-bottom:4px;
+    }
+
+    .meta {
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      color:var(--muted);
+      font-size:0.9rem;
+    }
+
+    .detail-tag {
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:8px;
+      background:#fff7ed;
+      color:var(--primary-color);
+      font-weight:600;
+      font-size:0.82rem;
+    }
+
+    .small {
+      font-size:0.85rem;
+      color:var(--muted);
+    }
+
+    /* Instructions collapse */
+    .instructions {
+      background:#fbfdff;
+      border-radius:8px;
+      padding:12px;
+      border:1px solid #eef2ff;
+      color: #24303a;
+      max-height: 4.6rem; /* show small preview by default */
+      overflow: hidden;
+      position:relative;
+      transition: max-height 0.22s ease;
+    }
+    .instructions.expanded { max-height: 800px; }
+
+    .instructions::after {
+      content: "";
+      position:absolute;
+      left:0; right:0; bottom:0;
+      height:40px;
+      background: linear-gradient(180deg, rgba(255,255,255,0), white 60%);
+      display: block;
+      pointer-events: none;
+    }
+    .instructions.expanded::after { display:none; }
+
+    .toggle {
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      align-items:center;
+      margin-top:6px;
+    }
+    .small-link {
+      background: transparent;
+      border: none;
+      color: var(--primary-color);
+      font-weight:700;
+      cursor:pointer;
+      padding:6px;
+      border-radius:6px;
+      transition: var(--transition-fast);
+    }
+    .small-link:hover { transform: translateY(-2px); background: rgba(249,115,22,0.06); }
+
+    /* footer */
+    footer {
+      max-width:1200px;
+      margin: 28px auto;
+      padding: 18px 20px;
+      color:#94a3b8;
+      font-size:0.9rem;
+      text-align:center;
+    }
+
+    /* responsive tweaks */
+    @media (max-width:520px){
+      .exercise-top{ flex-direction:column; align-items:flex-start; gap:8px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>{{title}}</h1>
+    <p>Your Personalized Workout — showtime.</p>
+  </header>
+
+  <div class="container">
+    <div class="top-row">
+      <div>
+        <div class="subtitle">{{exercises.length}} exercise{{#unless (eq exercises.length 1)}}s{{/unless}} found</div>
+        <div class="small">Showing full details — equipment, difficulty, type, and instructions.</div>
+      </div>
+
+      <div>
+        <a href="/" class="btn">← Home</a>
+        <!-- Example: link to all exercises or other pages -->
+        <a href="/exercises" class="btn" style="margin-left:10px; background:white; color:var(--secondary-color); border:1px solid #e6e9ef; font-weight:700;">All Exercises</a>
+      </div>
+    </div>
+
+    <div class="exercise-grid">
+      {{#each exercises}}
+        <article class="exercise-card" data-index="{{@index}}">
+          <div class="exercise-top">
+            <div>
+              <div class="exercise-name">{{this.name}}</div>
+              <div class="meta">
+                <span class="detail-tag">Muscle: {{this.muscle}}</span>
+                <span class="detail-tag">Equipment: {{this.equipment}}</span>
+                <span class="detail-tag">Difficulty: {{this.difficulty}}</span>
+                <span class="detail-tag">Type: {{this.type}}</span>
+              </div>
+            </div>
+
+            <div class="small" style="text-align:right;">
+              <div><strong>Index</strong></div>
+              <div style="margin-top:6px; color:var(--muted);">#{{@index}}</div>
+            </div>
+          </div>
+
+          <div>
+            <div style="margin-top:8px; color:var(--muted); font-weight:600;">Instructions</div>
+            <div class="instructions" id="instr-{{@index}}">
+              {{{this.instructions}}}  <!-- triple-stash so line breaks keep — trust your data source -->
+            </div>
+
+            <div class="toggle">
+              <button class="small-link" data-target="#instr-{{@index}}">View full instructions</button>
+            </div>
+          </div>
+        </article>
+      {{/each}}
+    </div>
+  </div>
+
+  <footer>
+    <a href="/" style="color:inherit; text-decoration:none;">← Back to Home</a> · Built with sweat and JS.
+  </footer>
+
+  <script>
+    // simple toggle for each "View full instructions" button
+    document.querySelectorAll('.small-link').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const targetSelector = btn.getAttribute('data-target');
+        const el = document.querySelector(targetSelector);
+        if (!el) return;
+        const expanded = el.classList.toggle('expanded');
+        btn.textContent = expanded ? 'Hide full instructions' : 'View full instructions';
+
+        // smooth scroll into view on open (mobile nicety)
+        if (expanded) {
+          setTimeout(() => {
+            el.scrollIntoView({ behavior:'smooth', block:'center' });
+          }, 160);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

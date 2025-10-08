@@ -31,9 +31,11 @@ const fetchAllExercies = async (req, res) => {
 }
 
 const fetchExercisesPerMuscleGroup = async (req , res) => {
-    const muscleGroup = req.params;
+    const muscleGroup = req.params.muscle;
 
-    await axios.get(`${process.env.BASE_URL_NINJAS}/exercises?muscle=${muscleGroup}` , {
+    if (!muscleGroup) return res.status(400).json({"errorMessage" : "Muscle group is required"})
+
+    await axios.get(`${process.env.BASE_URL_NINJAS}/exercises?muscle=${encodeURIComponent(muscleGroup)}` , {
         headers: {
             "X-Api-Key": process.env.API_KEY_NINJAS
         }

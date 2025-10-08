@@ -5,4 +5,7 @@ const exercisesContoller = require('../controllers/exercisesController');
 router.route('/')
     .get(exercisesContoller.fetchAllExercies);
 
+router.route('/exercisesPerMuscle/:muscle')
+    .get(exercisesContoller.fetchExercisesPerMuscleGroup);
+
 module.exports = router;
